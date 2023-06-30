@@ -59,14 +59,12 @@
 						if (GridXmlLoadedFirstTime) {
 							GridXmlLoadedFirstTime = false;
 						}
-					} ,
+					},
 					"gridLinkClick": function(linkVal) {
 						if (linkVal.length) {
 							showItemForm(linkVal);
 						}
 					}
-					
-
 				});
 
 				loadGrid();
@@ -126,7 +124,7 @@
 						"</AML>";
 					console.info("Call Bom Compare on server");
 					result = this.GetItemsResult(aml);
-					//debugger;
+					
 					if (typeof inputBaseItemId == 'undefined') {
 						// No explicit base input item was set, get i from result.
 						//cachedBaseItemId = result.selectSingleNode("//BaseItem/id").innerHTML;
@@ -154,7 +152,16 @@
 				var res = aras.soapSend('ApplyMethod', amlDOM.xml);
 				if (res.getFaultCode() != 0) {
 					console.error(res.getFaultString());
-					aras.AlertError(res.getFaultString(), res.getFaultDetails(), res.getFaultActor());
+					var errorMessage = res.getFaultString();
+					var errorDetails = res.getFaultDetails();
+					var expression = /<(\/br|br)[\s]*?\/?>/ig;
+					if (typeof errorMessage === 'string' || message instanceof String) {
+						errorMessage = errorMessage.replace(expression, '\r\n');
+					}
+					if (typeof errorDetails === 'string' || message instanceof String) {
+						errorDetails = errorDetails.replace(expression, '\r\n');
+					}
+					aras.AlertError(errorMessage, errorDetails, res.getFaultActor());
 					return;
 				}
 				return res.getResult().ownerDocument;
@@ -200,7 +207,7 @@
 			
 			var rows = res.selectNodes("//tr");
 			// Update headers with base item info
-			var updatedXML = gridDom.xml.replace("{0}", mainItem.getProperty("item_number") + " Rev. " + mainItem.getProperty("major_rev"));
+			var updatedXML = gridDom.xml.replace("{0}", mainItem.getProperty("item_number") + " Rev. " + mainItem.getProperty("major_rev") + " "); // Add space last make comparision between same Rev but different version to render correct
 			updatedXML = updatedXML.replace("{1}", baseItem.getProperty("item_number") + " Rev. " + baseItem.getProperty("major_rev"));
 			updatedXML = updatedXML.replace("{2}", " from " +  bomcompareHelper.GetItemPrimaryIdentifiers(baseItem));
 			
@@ -221,7 +228,6 @@
 			}
 	
 		}
-		
 		
 		function setCompareDescription(){
 			var desc = bomcompareHelper.GetItemPrimaryIdentifiers(baseItem);
@@ -253,8 +259,12 @@
 				resizable: true
 			};
 			//console.info("Select version");
-			aras.modalDialogHelper.show("DefaultPopup", window, param, options, "../../../../scripts/revisionDialog.html");
 			
+			var wnd = top.aras.getMainWindow();
+			wnd = wnd === top ? wnd.main : top;
+			
+			//console.info("Select version");
+			aras.modalDialogHelper.show("DefaultPopup", wnd, param, options, "revisionDialog.html");
 		}
 		
 		// Display and load other item
@@ -275,9 +285,12 @@
 				dialogHeight: 400,
 				resizable: true
 			};
-			aras.modalDialogHelper.show("DefaultPopup", window, params, options,"../../../../scripts/searchDialog.html");
+			
+			var wnd = top.aras.getMainWindow();
+			wnd = wnd === top ? wnd.main : top;
+			
+			aras.modalDialogHelper.show("DefaultPopup", wnd, params, options,"searchDialog.html");
 		}
-
 
 		// Toggle unchanged
 		function toggleUnchanged(buttonId){
@@ -354,7 +367,7 @@
 			}
 		}
 		
-		
+
 		function onCompareIndexChange(item) {
 			if (item.getId() == "compare_type") {
 				var newValue = item.getSelectedItem();
