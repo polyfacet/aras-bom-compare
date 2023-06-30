@@ -20,7 +20,7 @@
 			isEditMode = false,
 			GridXmlLoadedFirstTime = true,
 			innovator = new aras.getMostTopWindowWithAras(window).Innovator(),
-			// Initierar hjälp class för Changes
+			// Initiating the logic handler
 			bomcompareHelper = new BomComareHelper(),
 			grid,
 			toolbar,
@@ -37,9 +37,9 @@
 
 		window.onresize = fixGridHeight;
 		window.addEventListener("DOMContentLoaded", function () {
-			// Skapa toolbar som kopplas till html toolbar_slot
+			// Create toolbar which is connected to html toolbar_slot
 			clientControlsFactory.createControl("Aras.Client.Controls.Public.Toolbar", {id: "toolbar", connectId: "toolbar_slot"}, function (control) {
-				// toolbarApplet är varibel i toolbarTools.js
+				// toolbarApplet is a varible in toolbarTools.js
 				toolbarApplet = toolbar = control;
 				clientControlsFactory.on(toolbar, {
 					"onClick": onToolbarButtonClick
@@ -50,10 +50,10 @@
 				loadToolbar();
 			});
 	
-			// Skapa grid som kopplas till html gridTD
+			// Create a grid which is connected to html gridTD
 			clientControlsFactory.createControl("Aras.Client.Controls.Public.GridContainer", {connectId: "gridTD"}, function (control) {
 				gridApplet = grid = control;
-				// Koppla olika event
+				// Connect different events
 				clientControlsFactory.on(grid, {
 					"gridXmlLoaded": function(isSuccess) {
 						if (GridXmlLoadedFirstTime) {
@@ -96,52 +96,28 @@
 		
 			this.GetBomCompare = function BomComareHelper_GetBomCompare(itemTypeName, compareItemID, inputBaseItemId){
 				var result;
-				var updateCache = true;
-				if (typeof cachedResult == 'undefined') {
-					// No cached result
-					//console.info("No cached result");
-					updateCache = true;
-				}
-				else {
-					//console.info("Use cached? " + inputBaseItemId + " == " + cachedBaseItemId);
-					if (inputBaseItemId == cachedBaseItemId) {
-						// Use the cached result
-						//updateCache = false;
-						// TODO: fix the caching. The cache/result is "destroyed"/trunctated when loading grid.
-						updateCache = true;
-					}
-					else {
-						
-						updateCache = true;
-					}
-				}
+			
+				var aml = "" +
+					"<AML>" +
+					"	<Item type='" + itemTypeName + "' action='HC_PartBomCompare_Generic' id='" + compareItemID + "' baseId='" + inputBaseItemId + "' compareBy='" + compareBy + "'>" +
+					" </Item>" +
+					"</AML>";
+				console.info("Call Bom Compare on server");
+				result = this.GetItemsResult(aml);
 				
-				if (updateCache) {
-					var aml = "" +
-						"<AML>" +
-						"	<Item type='" + itemTypeName + "' action='HC_PartBomCompare_Generic' id='" + compareItemID + "' baseId='" + inputBaseItemId + "' compareBy='" + compareBy + "'>" +
-						" </Item>" +
-						"</AML>";
-					console.info("Call Bom Compare on server");
-					result = this.GetItemsResult(aml);
-					
-					if (typeof inputBaseItemId == 'undefined') {
-						// No explicit base input item was set, get i from result.
-						//cachedBaseItemId = result.selectSingleNode("//BaseItem/id").innerHTML;
-						var baseItemNode = result.getElementsByTagName("BaseItem")[0];
-						var baseItemidNode = baseItemNode.childNodes[0];
-						cachedBaseItemId = baseItemidNode.text;
-					} 
-					else {
-						cachedBaseItemId = inputBaseItemId;
-					}
-					//console.info("Setting cached id " + cachedBaseItemId);
-					cachedResult = result;
-				}
+				if (typeof inputBaseItemId == 'undefined') {
+					// No explicit base input item was set, get i from result.
+					//cachedBaseItemId = result.selectSingleNode("//BaseItem/id").innerHTML;
+					var baseItemNode = result.getElementsByTagName("BaseItem")[0];
+					var baseItemidNode = baseItemNode.childNodes[0];
+					cachedBaseItemId = baseItemidNode.text;
+				} 
 				else {
-					//console.info("Using cached Bom Compare result");
-					result = cachedResult;
+					cachedBaseItemId = inputBaseItemId;
 				}
+				//console.info("Setting cached id " + cachedBaseItemId);
+				cachedResult = result;
+				
 				return result;;
 			}
 			
@@ -295,7 +271,6 @@
 		// Toggle unchanged
 		function toggleUnchanged(buttonId){
 			
-			//var showOn = buttonId.endsWith("_off"); // Not supported by Internet Explorer
 			var showOn = buttonId.match("_off$");
 			if (showOn) {
 				toolbar.hideItem("toggle_unchanged_off");
@@ -319,25 +294,25 @@
 
 		function doOnlyDisplayChanges() {
 			onlyDisplayChanges = true;
-			var unchangesIds = [];
+			var unchangedIds = [];
 			for (var i = 0; i < grid.getRowCount(); i++) {
 				var statusValue = grid.cells2(i,0).getText();	
 				if (statusValue == "Unchanged") {
-					unchangesIds.push(grid.GetRowId(i));
+					unchangedIds.push(grid.GetRowId(i));
 				}
 			}
 			
-			for (var i = 0; i < unchangesIds.length; i++) {
-				var rowId = unchangesIds[i];
+			for (var i = 0; i < unchangedIds.length; i++) {
+				var rowId = unchangedIds[i];
 				grid.deleteRow(rowId);
 			}
 		}
 		
 		function loadToolbar() {
 			toolbarReady = true;
-			// toolbar (dojo-typ/variabel?) laddar in componenterna ifrån xml filen
+			// toolbar (dojo-typ/variable?) loads components from the xml file
 			toolbar.loadXml(aras.getI18NXMLResource("BomCompare_toolbar.xml", aras.getScriptsURL() + "../Solutions/HilleConsultit/"));
-			// tb1 är xml-id if xmlen ovan. 
+			// tb1 is xml-id in the xml above. 
 			toolbar.ShowToolbar("tb1");
 			// initToolbar = dojo?
 			initToolbar();
