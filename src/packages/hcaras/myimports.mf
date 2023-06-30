@@ -1,0 +1,4 @@
+<imports>
+  <package name="se.hilleconsultit.hcbomcomare" path="hc.bomcompare\Import">
+  </package>
+</imports>
