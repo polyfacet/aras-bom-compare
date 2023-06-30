@@ -1,7 +1,19 @@
 # Aras BOM Compare
 
-A Part BOM Compare implementation for Aras Innovator.
-See old demo on [Bom Compare Demo (R11)](https://youtu.be/jsfyDUVPpqs?t=173)
+A Part BOM Compare implementation for Aras Innovator.  
+See old demo on [Bom Compare Demo (R11)](https://youtu.be/jsfyDUVPpqs?t=173)  
+Image shows example applied to Aras Innovator R2023 OOTB (which also has [Validations](https://github.com/polyfacet/aras-validations) implemented)
+
+![Bom Compare Example](docs/images/bom-compare-example.png)
+
+## Features
+
+- Highlighting of changes
+- Toggle on/off to only show changes vs. complete BOMs
+- Compare with specific version/generation
+- Compare with another Part
+- Compare using different indexes (i.e. by Part Number/Sequence)
+- Export to Excel
 
 ## Install steps
 
