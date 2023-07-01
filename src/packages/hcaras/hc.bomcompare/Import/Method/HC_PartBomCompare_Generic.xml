@@ -118,6 +118,7 @@ Private Function GetCompareProperties() As List(Of BomCompare.IBomCompareItemPro
     Dim seqProp As BomCompare.IBomCompareItemProperty = New BomCompare.RelationshipProperty("sort_order", "Sequence")
     Dim itemNumberProp As BomCompare.IBomCompareItemProperty = New BomCompare.NonRelProperty("item_number", "Part Number")
 
+    
     If Me.CompareBy.ToUpper = "Seq".ToUpper Then
         Me.IndexProperty = seqProp
     End If
@@ -133,6 +134,8 @@ Private Function GetCompareProperties() As List(Of BomCompare.IBomCompareItemPro
     End If
 
     compProperties.Add(itemNumberProp)
+
+    compProperties.Add(New BomCompare.NonRelProperty("id", "ID"))
 
     ' Add Non comare properties
     Dim descCompProp As BomCompare.IBomCompareItemProperty = New BomCompare.NonRelProperty("name", "Name")

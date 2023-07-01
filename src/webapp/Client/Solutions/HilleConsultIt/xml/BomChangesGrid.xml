@@ -6,6 +6,7 @@ enterAsTab="false" bgInvert="false" onDoubleClick="doDoubleClick" onRowSelect="o
 		<th align="c">Ch. Type</th>
 		
 		<th align="c">Part Number</th>
+		<th align="c">ID</th>
 		<th align="cbold">Name ({0})</th>
 		<th align="c">Rev.</th>
 		<th align="c">Qty</th>
@@ -13,6 +14,7 @@ enterAsTab="false" bgInvert="false" onDoubleClick="doDoubleClick" onRowSelect="o
 		<th align="c">--</th>
 		
 		<th align="c">Part Number </th>
+		<th align="c">ID </th>
 		<th align="cbold">Name ({1})</th>
 		<th align="c">Rev. </th>
 		<th align="c">Qty </th>
@@ -24,19 +26,21 @@ enterAsTab="false" bgInvert="false" onDoubleClick="doDoubleClick" onRowSelect="o
 		<column width="75" edit="" align="l" order="0"/>
 		
 		<column width="90" edit="" align="l" order="1"/>
-		<column width="250" edit="" align="l" order="2"/>
-		<column width="25" edit="" align="l" order="3"/>
+		<column width="0" edit="" align="l" order="2" draggable="false"/>
+		<column width="250" edit="" align="l" order="3"/>
 		<column width="25" edit="" align="l" order="4"/>
+		<column width="25" edit="" align="l" order="5"/>
 		
 		
-		<column width="20" edit="" align="l" order="5"/>
+		<column width="20" edit="" align="l" order="6"/>
 		
-		<column width="90" edit="" align="l" order="6"/>
-		<column width="250" edit="" align="l" order="7"/>
-		<column width="25" edit="" align="l" order="8"/>
-		<column width="25" edit="" align="l" order="9"/>
+		<column width="90" edit="" align="l" order="7"/>
+		<column width="0" edit="" align="l" order="8" draggable="false"/>
+		<column width="250" edit="" align="l" order="9"/>
+		<column width="25" edit="" align="l" order="10"/>
+		<column width="25" edit="" align="l" order="11"/>
 		
-		<column width="350" edit="" align="l" order="10"/>
+		<column width="350" edit="" align="l" order="12"/>
 		
 	</columns>
 	<menu/>
